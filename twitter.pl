@@ -28,15 +28,15 @@ while (<FILE>)
     print "Parsing line: $counter\n";
     $counter + 1;
 
-    my ($url, $res_txt) = $line =~ /URL:(.*),RES_TXT:(.*),<EOH>/;
-    my ($url, $res_txt) = ($1,$2); 
+    my ($ts, $saddr, $daddr, $sport, $dport, $fid, $mtd, $resp, $host, $uac, $url, $cookie, $req_len, $req_type, $res_len, $res_type, $res_cencode, $res_tencode, $req_txt, $res_txt) = $line =~ /TS:(.*),SADDR:(.*),DADDR:(.*),SPORT:(.*),DPORT:(.*),FID:(.*),MTD:(.*),RESP:(.*),HOST:(.*),UAC:(.*),URL:(.*),COOKIE:(.*),REQ_LEN:(.*),REQ_TYPE:(.*),RES_LEN:(.*),RES_TYPE:(.*),RES_CENCODE:(.*),RES_TENCODE:(.*),REQ_TXT:(.*),RES_TXT:(.*),<EOH>/;
+    my ($ts, $saddr, $daddr, $sport, $dport, $fid, $mtd, $resp, $host, $uac, $url, $cookie, $req_len, $req_type, $res_len, $res_type, $res_cencode, $res_tencode, $req_txt, $res_txt) = ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20); 
 
     my $obj = $json->utf8(1)->decode($res_txt); 
 
     if($url =~ /.*\/(.*)\.json/){
         my $event = $1;
 
-        print CSV "$event|";
+        print CSV "$ts|$event|";
 
         if(ref($obj) eq "ARRAY") {
 
@@ -80,10 +80,8 @@ while (<FILE>)
 close (CSV); close (FILE);
 
 sub print_non_entity {
-    print CSV $_[1]->{$_[0]} . $_[2] . $_[1]->{user}->{$_[0]} . $_[2] . $_[1]->{status}->{$_[0]} . $_[2] . 
-              $_[1]->{status}->{place}->{$_[0]} . $_[2] . $_[1]->{recipient}->{$_[0]} . $_[2] . $_[1]->{sender}->{$_[0]} . $_[2];
+    print CSV $_[1]->{$_[0]} . $_[2] . $_[1]->{user}->{$_[0]} . $_[2] . $_[1]->{status}->{$_[0]} . $_[2] . $_[1]->{status}->{place}->{$_[0]} . $_[2] . $_[1]->{recipient}->{$_[0]} . $_[2] . $_[1]->{sender}->{$_[0]} . $_[2];
 }
-
 sub print_entity {
     print CSV $_[3]->{$_[0]} . $_[4] . $_[3]->{$_[1]} . $_[4] . $_[3]->{$_[2]} . $_[4];                              
 }
