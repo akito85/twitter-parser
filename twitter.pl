@@ -7,8 +7,8 @@ use Config::Tiny;
 $file_log = $ARGV[0];
 $file_conf = $ARGV[1];
 
-open (FILE, $file_log) or die("Unable to open file log!! " .$file_log . "\n");
-#open (CONFIG, $file_conf) or die ("Unable to open file config!! ". $file_conf . "\n");
+open (FILE, $file_log) or die("Unable to open file log!! " .$file_log . "$! \n");
+#open (CONFIG, $file_conf) or die ("Unable to open file config!! ". $file_conf . "$! \n");
 
 my $Config = Config::Tiny->new();
 $Config = Config::Tiny->read('twitter.conf');
@@ -87,17 +87,19 @@ sub print_non_entity {
 #           2. non_entity->user->index 
 #           3. non_entity->status->index 
 #           4. non_entity->status->place->index
-    print CSV $_[1]->{$_[0]} . $_[2] ;
-    print CSV $_[1]->{user}->{$_[0]} . $_[2] ; 
-    print CSV $_[1]->{status}->{$_[0]} . $_[2] ; 
-    print CSV $_[1]->{status}->{place}->{$_[0]} . $_[2] ; 
-    print CSV $_[1]->{recipient}->{$_[0]} . $_[2] ;
-    print CSV $_[1]->{sender}->{$_[0]} . $_[2];
+    print CSV 
+    $_[1]->{$_[0]} . $_[2] .
+    $_[1]->{user}->{$_[0]} . $_[2] . 
+    $_[1]->{status}->{$_[0]} . $_[2] . 
+    $_[1]->{status}->{place}->{$_[0]} . $_[2] . 
+    $_[1]->{recipient}->{$_[0]} . $_[2] .
+    $_[1]->{sender}->{$_[0]} . $_[2];
 }
 sub print_entity {
-    print CSV $_[3]->{$_[0]} . $_[4] . 
-              $_[3]->{$_[1]} . $_[4] . 
-              $_[3]->{$_[2]} . $_[4];                              
+    print CSV 
+    $_[3]->{$_[0]} . $_[4] . 
+    $_[3]->{$_[1]} . $_[4] . 
+    $_[3]->{$_[2]} . $_[4];                              
 }
 
 exit;
